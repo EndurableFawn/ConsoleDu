@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="ConsoleDu:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ConsoleDu_jar</output-path>
+    <root id="root">
+      <element id="archive" name="ConsoleDu.jar">
+        <element id="module-output" name="ConsoleDu" />
+      </element>
+    </root>
+  </artifact>
+</component>
