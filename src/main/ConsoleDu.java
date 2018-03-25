@@ -1,6 +1,9 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,36 +28,65 @@ public class ConsoleDu {
                     break;
             }
         }
-        if (c) {
-            long res = 0;
-            for (String elem : args) {
-                if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
-                File file = new File(elem);
-                if (file.exists()) res += getLength(file);
-                else {
-                    check = false;
-                    System.out.println("File " + file.getName() + " doesn't exist.");
-                }
+        File outputFile = new File("out\\logs.txt");
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
+            if (c) {
+                long res = 0;
+                for (String elem : args) {
+                    if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
+                    File file = new File(elem);
+                    if (file.exists()) res += getLength(file);
+                    else {
+                        check = false;
+                        System.out.println("File " + file.getName() + " doesn't exist.");
+                        bw.write("File " + file.getName() + " doesn't exist.");
+                        bw.newLine();
+                    }
 
-            }
-            if (h) System.out.println("Total space: " +
-                    String.format("%.1f", human(res)) + " " + dim);
-            else System.out.println("Total space: " + String.format("%.1f", res / base));
-        } else {
-            for (String elem : args) {
-                if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
-                File file = new File(elem);
-                if (file.exists()) {
-                    if (h) System.out.println(file.getName() + ": " +
-                            String.format("%.1f", human(getLength(file))) + " " + dim);
-                    else System.out.println(file.getName() + ": " +
-                            String.format("%.1f", getLength(file) / base));
+                }
+                if (h) {
+                    System.out.println("Total space: " +
+                            String.format("%.1f", human(res)) + " " + dim);
+                    bw.write("Total space: " +
+                            String.format("%.1f", human(res)) + " " + dim);
+                    bw.newLine();
                 } else {
-                    System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
-                    check = false;
+                    System.out.println("Total space: " + String.format("%.1f", res / base));
+                    bw.write("Total space: " + String.format("%.1f", res / base));
+                    bw.newLine();
                 }
+            } else {
+                for (String elem : args) {
+                    if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
+                    File file = new File(elem);
+                    if (file.exists()) {
+                        if (h) {
+                            System.out.println(file.getName() + ": " +
+                                    String.format("%.1f", human(getLength(file))) + " " + dim);
+                            bw.write(file.getName() + ": " +
+                                    String.format("%.1f", human(getLength(file))) + " " + dim);
+                            bw.newLine();
+                        } else {
+                            System.out.println(file.getName() + ": " +
+                                    String.format("%.1f", getLength(file) / base));
+                            bw.write(file.getName() + ": " +
+                                    String.format("%.1f", getLength(file) / base));
+                            bw.newLine();
+                        }
 
+                    } else {
+                        System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
+                        check = false;
+                        bw.write("File " + file.getAbsolutePath() + " doesn't exist.");
+                        bw.newLine();
+                    }
+
+                }
             }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(1);
         }
         System.exit(check ? 0 : 1);
     }
