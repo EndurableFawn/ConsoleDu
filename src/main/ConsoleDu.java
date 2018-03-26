@@ -8,12 +8,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleDu {
-    private static boolean c = false;
-    private static boolean h = false;
-    private static double base = 1024.0;
-    private static String dim = "";
+    private static boolean c;
+    private static boolean h;
+    private static double base;
+    private static String dim;
 
     public static void main(String[] args) {
+        c = false;
+        h = false;
+        base = 1024.0;
+        dim = "";
+        ConsoleDu.du(args);
+    }
+
+    public static int du(String[] args) {
         boolean check = true;
         for (String elem : args) {
             switch (elem) {
@@ -39,8 +47,8 @@ public class ConsoleDu {
                     if (file.exists()) res += getLength(file);
                     else {
                         check = false;
-                        System.out.println("File " + file.getName() + " doesn't exist.");
-                        bw.write("File " + file.getName() + " doesn't exist.");
+                        System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
+                        bw.write("File " + file.getAbsolutePath() + " doesn't exist.");
                         bw.newLine();
                     }
 
@@ -76,19 +84,19 @@ public class ConsoleDu {
                         }
 
                     } else {
-                        System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
                         check = false;
+                        System.out.println("File " + file.getAbsolutePath() + " doesn't exist.");
                         bw.write("File " + file.getAbsolutePath() + " doesn't exist.");
                         bw.newLine();
                     }
 
                 }
             }
+            bw.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
-            System.exit(1);
         }
-        System.exit(check ? 0 : 1);
+        return check ? 0 : 1;
     }
 
     private static long getLength(File file) {
