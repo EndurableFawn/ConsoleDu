@@ -1,41 +1,12 @@
 package main;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleDu {
-    private static boolean c;
-    private static boolean h;
-    private static double base;
-    private static String dim;
-
-    public static void main(String[] args) {
-        c = false;
-        h = false;
-        base = 1024.0;
-        dim = "";
-        ConsoleDu.du(args);
-    }
-
-    public static int du(String[] args) {
+    public static int du(String[] args, boolean c, boolean h, double base) {
         boolean check = true;
-        for (String elem : args) {
-            switch (elem) {
-                case "--si":
-                    base = 1000.0;
-                    break;
-                case "-c":
-                    c = true;
-                    break;
-                case "-h":
-                    h = true;
-                    break;
-            }
-        }
         File outputFile = new File("out\\logs.txt");
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
@@ -54,11 +25,9 @@ public class ConsoleDu {
 
                 }
                 if (h) {
-                    System.out.println("Total space: " +
-                            String.format("%.1f", human(res)) + " " + dim);
-                    bw.write("Total space: " +
-                            String.format("%.1f", human(res)) + " " + dim);
-                    bw.newLine();
+                    System.out.print("Total space: ");
+                    bw.write("Total space: ");
+                    human(res, base, bw);
                 } else {
                     System.out.println("Total space: " + String.format("%.1f", res / base));
                     bw.write("Total space: " + String.format("%.1f", res / base));
@@ -70,11 +39,9 @@ public class ConsoleDu {
                     File file = new File(elem);
                     if (file.exists()) {
                         if (h) {
-                            System.out.println(file.getName() + ": " +
-                                    String.format("%.1f", human(getLength(file))) + " " + dim);
-                            bw.write(file.getName() + ": " +
-                                    String.format("%.1f", human(getLength(file))) + " " + dim);
-                            bw.newLine();
+                            System.out.print(file.getName() + ": ");
+                            bw.write(file.getName() + ": ");
+                            human(getLength(file), base, bw);
                         } else {
                             System.out.println(file.getName() + ": " +
                                     String.format("%.1f", getLength(file) / base));
@@ -111,14 +78,20 @@ public class ConsoleDu {
         return length;
     }
 
-    private static double human(long length) {
+    private static void human(long length, double base, BufferedWriter bw) {
         double len = (double) length;
         List<String> dimensions = Arrays.asList("B", "KB", "MB", "GB", "TB");
-        dim = "B";
+        String dim = "B";
         for (int i = 1; len >= base; i++) {
             len /= base;
             dim = dimensions.get(i);
         }
-        return len;
+        System.out.print(String.format("%.1f", len) + " " + dim + "\n");
+        try {
+            bw.write(String.format("%.1f", len) + " " + dim);
+            bw.newLine();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
