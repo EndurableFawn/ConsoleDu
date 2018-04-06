@@ -5,15 +5,26 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleDu {
-    public static int du(String[] args, boolean c, boolean h, double base) {
+    private boolean c;
+    private boolean h;
+    private double base;
+    private List<String> elems;
+
+    public ConsoleDu(boolean c, boolean h, double base, List<String> elems) {
+        this.c = c;
+        this.h = h;
+        this.base = base;
+        this.elems = elems;
+    }
+
+    public int du() {
         boolean check = true;
         File outputFile = new File("out\\logs.txt");
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile));
             if (c) {
                 long res = 0;
-                for (String elem : args) {
-                    if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
+                for (String elem : elems) {
                     File file = new File(elem);
                     if (file.exists()) res += getLength(file);
                     else {
@@ -34,8 +45,7 @@ public class ConsoleDu {
                     bw.newLine();
                 }
             } else {
-                for (String elem : args) {
-                    if (elem.equals("--si") || elem.equals("-c") || elem.equals("-h")) continue;
+                for (String elem : elems) {
                     File file = new File(elem);
                     if (file.exists()) {
                         if (h) {
