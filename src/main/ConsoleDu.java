@@ -1,7 +1,7 @@
 package main;
 
+
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleDu {
@@ -9,6 +9,7 @@ public class ConsoleDu {
     private boolean h;
     private double base;
     private List<String> elems;
+    private static final String[] dimensions = new String[]{"B", "KB", "MB", "GB", "TB"};
 
     public ConsoleDu(boolean c, boolean h, double base, List<String> elems) {
         this.c = c;
@@ -38,7 +39,7 @@ public class ConsoleDu {
                 if (h) {
                     System.out.print("Total space: ");
                     bw.write("Total space: ");
-                    human(res, base, bw);
+                    human(res, bw);
                 } else {
                     System.out.println("Total space: " + String.format("%.1f", res / base));
                     bw.write("Total space: " + String.format("%.1f", res / base));
@@ -51,7 +52,7 @@ public class ConsoleDu {
                         if (h) {
                             System.out.print(file.getName() + ": ");
                             bw.write(file.getName() + ": ");
-                            human(getLength(file), base, bw);
+                            human(getLength(file), bw);
                         } else {
                             System.out.println(file.getName() + ": " +
                                     String.format("%.1f", getLength(file) / base));
@@ -88,13 +89,12 @@ public class ConsoleDu {
         return length;
     }
 
-    private static void human(long length, double base, BufferedWriter bw) {
+    private void human(long length, BufferedWriter bw) {
         double len = (double) length;
-        List<String> dimensions = Arrays.asList("B", "KB", "MB", "GB", "TB");
         String dim = "B";
         for (int i = 1; len >= base; i++) {
             len /= base;
-            dim = dimensions.get(i);
+            dim = dimensions[i];
         }
         System.out.print(String.format("%.1f", len) + " " + dim + "\n");
         try {
