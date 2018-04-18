@@ -91,7 +91,7 @@ public class ConsoleDu {
 
     private void human(long length, BufferedWriter bw) {
         double len = (double) length;
-        String dim = "B";
+        String dim = dimensions[0];
         for (int i = 1; len >= base; i++) {
             len /= base;
             dim = dimensions[i];
